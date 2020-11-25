@@ -44,6 +44,9 @@ Do you want to save this (1 = yes, other = no): 1
 Data has been saved!
 ```
 
+Warnings:
+- You may need to change the number of channels you have for recording
+
 ### `plot_audio_real_time.py`
 
 This was a file that I borrowed from the `sounddevice` Python libraries docs.

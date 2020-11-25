@@ -10,7 +10,7 @@ from utilities.constants import fs
 
 
 def unique_file_name_for_(sample: WaterState, uuid: int) -> str:
-    return f"{uuid}_{sample.name.title()}.wav"
+    return f"data/{uuid}_{sample.name.title()}.wav"
 
 
 def record_sample_for_(length: Seconds) -> Recording:
