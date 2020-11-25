@@ -1,0 +1,1 @@
+fs = 44100  # Sample rate for python sounddevice

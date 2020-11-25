@@ -1,6 +1,6 @@
 # SVM Audio Classification
 
-AOA Final Project, using an SVM (Support Vector Machine) to classify audio from a sink
+AOA Final Project, using an SVM (Support Vector Machine) to classify audio from a kitchen sink.
 
 # Project structure
 
@@ -21,7 +21,28 @@ First, we'll write a little script that helps us get this data/
 
 ### `record_sample.py`
 
-TODO
+This is a script that walks you through recording a sample of `wav` files and a `csv` file for the data you need.
+The prompt is as follows:
+
+
+```
+Enter sample length (seconds): 1
+Make sure it's quiet, then press enter to record for 1 seconds...
+
+Recording...
+
+Set the faucet to drip, then press enter to record for 1 seconds...
+
+Recording...
+
+Turn the faucet on, then press enter to record for 1 seconds...
+
+Recording...
+
+Do you want to save this (1 = yes, other = no): 1
+
+Data has been saved!
+```
 
 ### `plot_audio_real_time.py`
 
