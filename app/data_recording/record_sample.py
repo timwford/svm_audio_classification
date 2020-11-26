@@ -47,7 +47,7 @@ def record_sample_pack():
             save_sample_to_file_(unique_file_name_for_(WaterState.DRIP, uuid), drip_array)
             save_sample_to_file_(unique_file_name_for_(WaterState.FULL, uuid), full_array)
 
-            sample_df.to_csv(f"{uuid}_data.csv")
+            sample_df.to_csv(f"data/{uuid}_data.csv")
 
             print("\nData has been saved!\n")
     except ValueError:

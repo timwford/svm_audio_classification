@@ -52,3 +52,9 @@ Warnings:
 This was a file that I borrowed from the `sounddevice` Python libraries docs.
 It helped me debug any audio issues I was having and got me familiar with the library.
 It should run just fine with it's configuration, fun to try out honestly!
+
+## Part 2: Cleaning/Preparing the data
+
+Now that we have our samples and our file of raw input, we need to generate some useful information from it.
+I hope to do this using the [Librosa Package](https://librosa.org/doc/latest/index.html).
+
