@@ -74,6 +74,13 @@ It finds the amplitudes and peak count for each of our samples and then stores t
 It also plots the results, colored by state type (off, drip, on) on a scatter plot.
 The first thing I noticed is that I need more data!
 
-[Scatter plot!](app/feature_extraction/water%20scatter.png)
+![Scatter plot!](app/feature_extraction/water%20scatter.png)
 
- 
+# Part 3: Classifying with the SVM
+
+Lastly, we need to classify our faucet data. 
+To start, let's worry about classifying between off and dripping.
+
+## Off vs. Drip
+
+
