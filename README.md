@@ -22,6 +22,7 @@ First, we'll write a little script that helps us get this data/
 ### `record_sample.py`
 
 This is a script that walks you through recording a sample of `wav` files and a `csv` file for the data you need.
+It uses your computer's built in microphone default to record, my Mac's was good enough to provide good results.
 The prompt is as follows:
 
 
@@ -58,3 +59,21 @@ It should run just fine with it's configuration, fun to try out honestly!
 Now that we have our samples and our file of raw input, we need to generate some useful information from it.
 I hope to do this using the [Librosa Package](https://librosa.org/doc/latest/index.html).
 
+### In Search of Features
+
+This is a Jupyter notebook that documented my (very) creative process of feature selection for the audio samples I made.
+It can be run the following way if you already have a virtual environment with the requirements installed:
+- `jupyter-notebook`
+- navigate to where the `.ipynb` file is and open it
+- press `Run All`
+
+### `features.py`
+
+This uses the findings from `In Search of Features` to build out a csv that will be useful for training our data.
+It finds the amplitudes and peak count for each of our samples and then stores them in a dataframe.
+It also plots the results, colored by state type (off, drip, on) on a scatter plot.
+The first thing I noticed is that I need more data!
+
+[Scatter plot!](app/feature_extraction/water%20scatter.png)
+
+ 

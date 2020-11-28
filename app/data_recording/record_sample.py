@@ -15,16 +15,16 @@ def unique_file_name_for_(sample: WaterState, uuid: int) -> str:
 
 def record_sample_for_(length: Seconds) -> Recording:
     print("\nRecording...\n")
-    recording: Recording = sd.rec(int(length * fs), samplerate=fs, channels=1)
+    audio: Recording = sd.rec(int(length * fs), samplerate=fs, channels=1)
     sd.wait()
-    return recording
+    return audio
 
 
 def save_sample_to_file_(filename: str, audio: Recording):
     write(filename, fs, audio)
 
 
-def record_sample_pack():
+def record_sample():
     uuid: int = int(time.time())
     sample_length: Seconds = int(input("Enter sample length (seconds): "))
 
@@ -51,8 +51,8 @@ def record_sample_pack():
 
             print("\nData has been saved!\n")
     except ValueError:
-        print("See you next time!")
+        print("Ok, see you next time!")
 
 
 if __name__ == '__main__':
-    record_sample_pack()
+    record_sample()
