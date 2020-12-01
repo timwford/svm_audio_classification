@@ -9,4 +9,5 @@ class AutoName(Enum):
 class WaterState(AutoName):
     OFF = auto()
     DRIP = auto()
-    FULL = auto()
+    ON = auto()
+    UNKNOWN = auto()

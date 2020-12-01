@@ -12,6 +12,9 @@ from utilities.constants import fs
 def unique_file_name_for_(sample: WaterState, uuid: int) -> str:
     return f"data/{uuid}_{sample.name.title()}.wav"
 
+def scale_recording(audio: Recording) -> Recording:
+    louder_audio = np.multiply(audio, 1.2)
+    return louder_audio
 
 def record_sample_for_(length: Seconds) -> Recording:
     print("\nRecording...\n")
@@ -19,10 +22,8 @@ def record_sample_for_(length: Seconds) -> Recording:
     sd.wait()
     return audio
 
-
 def save_sample_to_file_(filename: str, audio: Recording):
     write(filename, fs, audio)
-
 
 def record_sample():
     uuid: int = int(time.time())

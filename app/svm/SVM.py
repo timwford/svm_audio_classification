@@ -1,63 +1,39 @@
-import numpy as np
-import pandas as pd
-
-class SVM(object):
-    def __init__(self, n, rate=0.01, margin=10000):
-        self.n = n
-        self.weights = np.zeros((1, 1))
+class SVM:
+    def __init__(self, epochs, rate=0.0001):
+        self.epochs = epochs
         self.rate = rate
-        self.margin = margin
+        self.current_epoch = 1
 
-    def cost(self, points):
-        distances = 1 - points[:, -1] * (np.dot(points[:, :-1], self.weights[1:]) + self.weights[0])
-        distances[distances < 0] = 0
-        loss = self.margin * np.mean(distances)
+        self.w1 = 0
+        self.w2 = 0
+        self.b = 0
 
-        return 1 / 2 * np.dot(self.weights, self.weights) + loss
+    def regularization(self) -> float:
+        return 1 / self.current_epoch
 
-    def cost_gradient(self, points):
+    def predict(self, data, classes):
 
-        distance = 1 - (points[-1] * (np.dot(points[:-1], self.weights[1:]) + self.weights[0]))
-        delta_weights = np.zeros(self.weights.shape).astype(np.float64)
+        for epoch in range(self.current_epoch, self.epochs):
+            self.current_epoch = epoch
+            y_pred = classes * (self.w1 * data[:, 0] + self.w2 * data[:, 1] + self.b)
 
-        if distance < 0:
-            delta_weights += self.weights
-        else:
-            delta_weights[1:] += self.weights[1:] - (self.margin * points[-1] * points[:-1]).astype(np.float64)
-            delta_weights[0] += self.weights[0] - (self.margin * points[-1])
+            m1_deriv = 0
+            m2_deriv = 0
+            b_deriv = 0
 
-        return delta_weights
+            for index, value in enumerate(y_pred):
+                if value < 1:
+                    m1_deriv += data[index, 0] * classes[index]
+                    m2_deriv += data[index, 1] * classes[index]
+                    b_deriv += classes[index]
 
-    def predict(self, data):
-        last_cost = float("inf")
-        self.weights = np.zeros(data.shape[1]).astype(np.float64)
+            self.w1 += self.rate * (m1_deriv - 2 * self.regularization() * self.w1)
+            self.w2 += self.rate * (m2_deriv - 2 * self.regularization() * self.w2)
+            self.b += self.rate * (b_deriv - 2 * self.regularization() * self.b)
 
-        for _ in range(self.n):
-            for ind, point in enumerate(data):
-                ascent = self.cost_gradient(point)
-                self.weights = self.weights - (self.rate * ascent)
-            cost = self.cost(data)
-            last_cost = cost
-
-        print(f"Last cost: {last_cost}")
+    def print_weights(self):
+        print(f"w1: {self.w1} w2: {self.w2} B: {self.b}")
 
 
 if __name__ == "__main__":
-    # df = pd.read_csv("dataset.csv")
-
-    df = pd.read_csv("Iris.csv")
-    df['SepalLengthCm'] =df['SepalLengthCm'].astype(float)
-    df['SepalWidthCm'] = df['SepalWidthCm'].astype(float)
-    df['PetalLengthCm'] = df['PetalLengthCm'].astype(float)
-    df['PetalWidthCm'] = df['PetalWidthCm'].astype(float)
-
-    print(df.head())
-
-    x = df.iloc[1:100, [2, 3, 4]].values
-    x[:, 2] = np.where(x[:, 2] == 'Iris-setosa', -1, 1)
-    xlabel_text = "Index 2"
-    ylabel_text = "Index 3"
-
-    #print(x)
-
-    SVM(1000).predict(x)
+    print('oh god')

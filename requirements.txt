@@ -22,3 +22,5 @@ toml==0.10.2
 tqdm==4.53.0
 
 librosa~=0.8.0
+fastapi~=0.62.0
+pydantic~=1.7.3
