@@ -26,7 +26,7 @@ if __name__ == "__main__":
     x = data
 
     svm = SVM.SVM(10000)
-    svm.predict(data, classes)
+    svm.fit(data, classes)
     svm.print_weights()
 
     correct = 0

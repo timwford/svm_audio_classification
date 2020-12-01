@@ -1,14 +1,19 @@
 from typing import Optional
 
+import numpy as np
+import pandas as pd
+
 from fastapi import FastAPI, status
 from fastapi.exceptions import HTTPException
 from pydantic import BaseModel
 
+from svm.water_classification import train_drip_model, train_on_model
 from utilities.enums import WaterState
 from utilities.annotations import Seconds, Recording
 from utilities.constants import version
 
-from data_recording.record_sample import record_sample_for_, scale_recording
+from data_recording.record_sample import record_sample_for_
+from svm.water_classification import filename
 
 from feature_extraction.features import generate_features_for_
 
@@ -20,28 +25,33 @@ app = FastAPI(title="Water Status Audio Classification",
 
 class WaterManager:
     class __WaterManager:
-
-        @property
-        def __str__(self):
-            return repr(self) + self.val
+        def __init__(self):
+            pass
 
     _instance = None
     status: WaterState = None
 
+    df = pd.read_csv(f"svm/{filename}")
+    drip_model = train_drip_model(df)
+    on_model = train_on_model(df)
+
     def __init__(self):
-        self.record_length: Seconds = 1
+        self.record_length: Seconds = 4
 
         if not WaterManager._instance:
             WaterManager._instance = WaterManager.__WaterManager()
 
     def get_status(self) -> Optional[WaterState]:
-        recording: Recording = scale_recording(record_sample_for_(self.record_length))
+        recording: Recording = record_sample_for_(self.record_length)
         amplitude, peak_count = generate_features_for_(recording)
 
-        if amplitude > 0.1:
-            self.status = WaterState.ON
-        elif peak_count > 0:
+        is_dripping = self.drip_model.predict(amplitude, peak_count)
+        is_on = self.on_model.predict(amplitude, peak_count)
+
+        if np.sign(is_dripping) == -1:
             self.status = WaterState.DRIP
+        elif np.sign(is_on) == -1:
+            self.status = WaterState.ON
         else:
             self.status = WaterState.OFF
 
@@ -70,7 +80,7 @@ async def root():
          status_code=200,
          summary="Get's the latest water drip status",
          description="If you're hosting this on your computer, this will record 4 seconds of audio from your computer's"
-                     "microphone and will then tell you if a drip was detected."
+                     " microphone and will then tell you if a drip was detected."
                      "\n\nOptions include (strings): ( OFF | DRIP | ON | UNKNOWN ) ")
 async def get_water_status():
 

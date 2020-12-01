@@ -39,10 +39,11 @@ def show_amplitude_for_(audio: Recording):
 def get_amplitude_for_(sample: Recording) -> float:
     try:
         S, phase = librosa.magphase(librosa.stft(sample))
+        return mean([np.max(a) for a in S])
     except librosa.util.exceptions.ParameterError:
-        print("what the hell")
-
-    return mean([np.max(a) for a in S])
+        sample = sample.reshape(-1)
+        S, phase = librosa.magphase(librosa.stft(sample))
+        return mean([np.max(a) for a in S])
 
 
 def line(slope, intercept):
@@ -76,8 +77,13 @@ def show_tempogram_for_(audio: Recording):
     plt.show()
 
 
-def get_tempo_peak_count_for_(audio: Recording) -> int:
-    t = librosa.feature.tempogram(audio)
+def get_tempo_peak_count_for_(sample: Recording) -> int:
+    try:
+        t = librosa.feature.tempogram(sample)
+    except librosa.util.exceptions.ParameterError:
+        sample = sample.reshape(-1)
+        t = librosa.feature.tempogram(sample)
+
     avgs = []
     for a in t:
         avgs.append(np.mean(a))
