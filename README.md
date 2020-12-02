@@ -133,7 +133,18 @@ This paper discusses SVM run time and comes up with a general O(n^2) (https://ww
 
 ### Fitting the Data
 
-An example of how to fit the data to detect water being on and dripping can be found in `water_classification.py`.
+An example of how to fit the data to detect water being on and dripping can be found here: 
+```python
+import pandas as pd
+
+from app.svm.water_classification import train_on_model, train_drip_model
+df = pd.read_csv('train_water.csv')
+
+svm_to_detect_on = train_on_model(df)
+svm_to_detect_drip = train_drip_model(df)
+
+svm_to_detect_drip.print_weights()
+```
 
 I got the chance to revise my data collection script to also process features and put that into a csv file.
 This greatly streamlined the data collection process and I collected a much bigger dataset that also separated well.
