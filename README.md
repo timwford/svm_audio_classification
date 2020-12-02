@@ -76,11 +76,66 @@ The first thing I noticed is that I need more data!
 
 ![Scatter plot!](app/feature_extraction/water%20scatter.png)
 
+I later got the chance to revise my data collection script to also process features and put that into a csv file.
+This greatly streamlined the data collection process and I collected a much bigger dataset that also separated well.
+I used this as my training data for the web server.
+
+![Better Scatter Plot](app/feature_extraction/water_classify_data.png)
+
 ## Part 3: Classifying with the SVM
 
 Lastly, we need to classify our faucet data. 
-To start, let's worry about classifying between off and dripping.
 
-### Off vs. Drip
+### The SVM
 
+The SVM has a couple parts that make it work. In the end, it’s really just a linear combination of weights, one per feature, and an intercept with a penalty function that penalizes it when misclassifies a data point. You run it against a training data set to determine ‘appropriate’ weights and then, you can enter in values and predict what class they might be in.
+
+``` python
+    def __init__(self, epochs, rate=0.0001):
+        self.epochs = epochs
+        self.rate = rate
+        self.current_epoch = 1
+
+        self.w1 = np.float64(0)
+        self.w2 = np.float64(0)
+        self.b = np.float64(0)
+```
+
+It runs for a certain number of times, known as epochs, and attempts to generate an optimal hyperplane (one that maximizes the margins between the support vectors, or those points closest to the ‘edge’ of the classification), by generating a predicted set of values from a linear combination of it’s weights and intercept and using a loss function to update the weights/intercept based on the error of that predicted set.
+
+```python
+    def fit(self, data, classes):
+        for epoch in range(self.current_epoch, self.epochs):
+            self.current_epoch = epoch
+            y_pred = (self.w1 * data[:, 0] + self.w2 * data[:, 1] + self.b) * classes
+```
+
+The loss function I used was the Hinge Loss function, which is intended to be used as a ‘maximum-margin’ loss function. When the value predicted is correctly classified, the weights are only updated with the regularization parameter scaled by the learning rate. However, if the value is misclassified, the loss function uses gradient descent to optimize the classification and update the weights using the class value, data values, as well as the learning rate and regularization parameter.
+
+```python
+            for index, value in enumerate(y_pred):
+                if value < 1:
+                    m1_deriv += data[index, 0] * classes[index]
+                    m2_deriv += data[index, 1] * classes[index]
+                    b_deriv += classes[index]
+
+            self.w1 += self.rate * (m1_deriv - 2 * self.regularization() * self.w1)
+            self.w2 += self.rate * (m2_deriv - 2 * self.regularization() * self.w2)
+            self.b += self.rate * (b_deriv - 2 * self.regularization() * self.b)
+```
+
+The regularization parameter prevents the model from overfitting by slowing the magnitude of change allowed the longer the model has been training.
+
+```python
+    def regularization(self) -> float:
+        return 1 / self.current_epoch
+```
+
+### Fitting the Data
+
+Here is an example of how to use the SVM on the data I collected.
+
+
+
+## Part 4: The Web Server
 
