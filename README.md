@@ -1,5 +1,7 @@
 # SVM Audio Classification
 
+[![SVM to Classify Audio](http://i3.ytimg.com/vi/AjpTCH-_fmY/maxresdefault.jpg)](https://www.youtube.com/watch?v=AjpTCH-_fmY)
+
 Using an SVM (Support Vector Machine) to classify audio from a kitchen sink.
 
 ## Project structure
