@@ -14,7 +14,6 @@ class SVM:
         return 1 / self.current_epoch
 
     def fit(self, data, classes):
-
         for epoch in range(self.current_epoch, self.epochs):
             self.current_epoch = epoch
             y_pred = (self.w1 * data[:, 0] + self.w2 * data[:, 1] + self.b) * classes
@@ -38,7 +37,3 @@ class SVM:
 
     def print_weights(self):
         print(f"w1: {self.w1} w2: {self.w2} B: {self.b}")
-
-
-if __name__ == "__main__":
-    print('oh god')

@@ -69,9 +69,11 @@ if __name__ == "__main__":
     drip = df[df['classification'] == WaterState.DRIP.name]
     on = df[df['classification'] == WaterState.ON.name]
 
-    plt.scatter(x=np.sqrt(off['amplitude']), y=np.sqrt(off['peak_count']), c='red')
-    plt.scatter(x=np.sqrt(drip['amplitude']), y=np.sqrt(drip['peak_count']), c='blue')
-    plt.scatter(x=np.sqrt(on['amplitude']), y=np.sqrt(on['peak_count']), c='green')
+    off_plot = plt.scatter(x=np.sqrt(off['amplitude']), y=np.sqrt(off['peak_count']), c='red', marker='x')
+    drip_plot = plt.scatter(x=np.sqrt(drip['amplitude']), y=np.sqrt(drip['peak_count']), c='blue', marker='v')
+    on_plot = plt.scatter(x=np.sqrt(on['amplitude']), y=np.sqrt(on['peak_count']), c='green', marker='o')
+
+    plt.legend([off_plot, drip_plot, on_plot], ['Off', 'Dripping', 'On'])
     plt.show()
 
 

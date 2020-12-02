@@ -46,7 +46,7 @@ def record_on_sample_for_(sample_length: Seconds) -> Recording:
     return record_sample_for_(sample_length)
 
 
-def record_sample():
+def record_sample_triple():
     uuid: int = int(time.time())
     length: Seconds = int(input("Enter sample length (seconds): "))
 
@@ -112,6 +112,5 @@ if __name__ == '__main__':
 
     row_dict = {'amplitude': amplitudes, 'peak_count': peak_counts, 'classification': classifications}
 
-    sample_df = pd.DataFrame(data=row_dict,
-                             columns=["amplitude", "peak_count", "classification"])
+    sample_df = pd.DataFrame(data=row_dict, columns=["amplitude", "peak_count", "classification"])
     sample_df.to_csv(f"data/{uuid}_features.csv")
