@@ -161,4 +161,36 @@ I did a test/train split with 80% train, and regularly get the accuracy of 1.0 f
 The final portion of the project is the webserver. This is just a quick and dirty FastAPI server that exposes 2 endpoints, a ‘/root’ endpoint which doesn’t do anything particularly interesting, and a ‘/status’ endpoint, that uses the system default mic and the trained SVM drip/on models from the training datasets I’ve already generated to give a classification for current conditions. 
 When you hit the ‘/status’ endpoint, it’s a GET request, it will record audio data from the mic for a predetermined amount of time (4 seconds at the moment), and then will run the two models to detect if the just recorded data has classified to be dripping or on. It will then return a simple JSON blob with the current water state.
 
-It is self-documented using OpenAPI docs. If you want to mess around with it, use the “run_fastapi” Pycharm configuration and navigate to http://127.0.0.1:8000/docs#/default/get_water_status_status_get.  
+```python
+async def get_water_status():
+
+    manager = WaterManager()
+    water_status = manager.get_status()
+
+    if water_status is None:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Unable to classify")
+
+    return WaterStateSchema(
+        water_status=water_status.name
+    )
+```
+
+I use a Pydantic model for structuring the return json:
+
+```python
+class WaterStateSchema(BaseModel):
+    water_status: str
+
+    class Config:
+        schema_extra = {
+            "water_status": "OFF|DRIP|ON"
+        }
+```
+
+There is also a singleton WaterManager that contains the models and is used to record and classify the data.
+
+It is self-documented using OpenAPI docs. If you want to mess around with it, use the “run_fastapi” Pycharm configuration and navigate to http://127.0.0.1:8000/docs#/default/get_water_status_status_get.
+The auto generated docs look like this:
+
+![OpenAPI Docs](app/fastapi_docs.png)
+  
