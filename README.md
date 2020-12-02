@@ -4,9 +4,10 @@ AOA Final Project, using an SVM (Support Vector Machine) to classify audio from 
 
 ## Project structure
 
-There are configurations for everything you need to run in Pycharm.
-There is a `requirements.txt` that has all of the pip packages you need.
-Lastly, this depends on `Python 3.9` for type annotations!
+- There are configurations for everything you need to run in Pycharm.
+- There is a `requirements.txt` that has all of the pip packages you need.
+- Use `pip install -r requirements.txt` from a terminal in your virtual environment.
+- Lastly, this depends on `Python 3.9` for type annotations!
 
 ### Part 1: Getting the data
 
@@ -76,11 +77,6 @@ The first thing I noticed is that I need more data!
 
 ![Scatter plot!](app/feature_extraction/water%20scatter.png)
 
-I later got the chance to revise my data collection script to also process features and put that into a csv file.
-This greatly streamlined the data collection process and I collected a much bigger dataset that also separated well.
-I used this as my training data for the web server.
-
-![Better Scatter Plot](app/feature_extraction/water_classify_data.png)
 
 ## Part 3: Classifying with the SVM
 
@@ -131,11 +127,27 @@ The regularization parameter prevents the model from overfitting by slowing the 
         return 1 / self.current_epoch
 ```
 
+### Run Time
+
+This paper discusses SVM run time and comes up with a general O(n^2) (https://www.csie.ntu.edu.tw/~cjlin/papers/libsvm.pdf). However, I believe my implementation runs in O(epochs * len(dataset)) since my SVM model has a for loop that iterates for epoch number of times and, for each epoch,  adjusts the weights for each value in the provided training dataset. 
+
 ### Fitting the Data
 
-Here is an example of how to use the SVM on the data I collected.
+An example of how to fit the data to detect water being on and dripping can be found in `water_classification.py`.
 
+I got the chance to revise my data collection script to also process features and put that into a csv file.
+This greatly streamlined the data collection process and I collected a much bigger dataset that also separated well.
+I used this as my training data for the web server.
+
+![Better Scatter Plot](app/feature_extraction/water_classify_data.png)
+
+I used this as my training data for the models.
+I did a test/train split with 80% train, and regularly get the accuracy of 1.0 for both models, even though the dataset is so small.
 
 
 ## Part 4: The Web Server
 
+The final portion of the project is the webserver. This is just a quick and dirty FastAPI server that exposes 2 endpoints, a ‘/root’ endpoint which doesn’t do anything particularly interesting, and a ‘/status’ endpoint, that uses the system default mic and the trained SVM drip/on models from the training datasets I’ve already generated to give a classification for current conditions. 
+When you hit the ‘/status’ endpoint, it’s a GET request, it will record audio data from the mic for a predetermined amount of time (4 seconds at the moment), and then will run the two models to detect if the just recorded data has classified to be dripping or on. It will then return a simple JSON blob with the current water state.
+
+It is self-documented using OpenAPI docs. If you want to mess around with it, use the “run_fastapi” Pycharm configuration and navigate to http://127.0.0.1:8000/docs#/default/get_water_status_status_get.  
