@@ -1,6 +1,6 @@
 # SVM Audio Classification
 
-AOA Final Project, using an SVM (Support Vector Machine) to classify audio from a kitchen sink.
+Using an SVM (Support Vector Machine) to classify audio from a kitchen sink.
 
 ## Project structure
 
@@ -18,11 +18,36 @@ We will try to classify data into three categories:
 2. Drip - the sink is turned such that there is a slight but consistent drip
 3. Full - the sink is turned on fully
 
-First, we'll write a little script that helps us get this data/
+First, we'll write a little script that helps us get this data.
 
 #### `record_sample.py`
 
-This is a script that walks you through recording a sample of `wav` files and a `csv` file for the data you need.
+I went through a couple iterations of data collection scripts.
+The final one is attached to the `generate_sample` Pycharm configuration.
+Running it will put you in a loop that asks what kind of sample you'd like to record.
+
+`"Record sample (0 = Off, 1 = Drip, 2, = On -1 = finish): "`
+
+Upon selection, it will tell you how to setup your environment and then pressing `Enter` will record a sample of the chosen length.
+It then stores it in a convenient object to make sure we can track the label and the sample together.
+
+```python
+from utilities.enums import WaterState
+from utilities.annotations import Recording
+
+class Sample:
+    def __init__(self, recording: Recording, classification: WaterState):
+        self.recording = recording
+        self.classification = classification
+```
+
+At the end of running, it takes all of the Samples and generates the features for them, and spits out a csv that looks like this:
+
+![Sample Dataset](app/svm/dataset_picture.png)
+
+#### `record_sample()`
+
+This function walks you through recording a sample of `wav` files and a `csv` file for the data you need.
 It uses your computer's built in microphone default to record, my Mac's was good enough to provide good results.
 The prompt is as follows:
 
